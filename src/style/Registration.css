@@ -1,0 +1,14 @@
+textarea{
+    overflow: hidden;
+    outline: none;
+    resize: none;
+}
+::-webkit-file-upload-button{
+    background-color: rgba(21, 101, 216, 1);
+    color: white;
+    padding: 5px;
+}
+.shift3{
+    padding-left: 35px;
+
+}
