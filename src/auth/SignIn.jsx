@@ -160,7 +160,7 @@ const SignIn = () => {
                   />
                 </div>
               ))}
-              <p><Link to={"../ForgotPassword"} className="text-decoration-none">
+              <p><Link to={"../forgotpassword"} className="text-decoration-none">
               Forgot password 
               </Link> </p>
               

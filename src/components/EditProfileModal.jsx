@@ -10,18 +10,21 @@ import Age from "../assets/profile-2user.png";
 import Gender from "../assets/Group.png";
 import locationpic from "../assets/location (1).png";
 import occupationpic from "../assets/bag.png";
-import { Link } from "react-router-dom";
+import { Link,Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
 import { IoMailOutline } from "react-icons/io5";
 import "../style/Registration.css";
 
 const EditProfileModal = (props) => {
+  const [bioProfile,setBioProfile] = useState([]);
     const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+
   // working on updating profile 21-05-2024
-  const [bioProfile, setBioProfile] = useState([]);
+  
   const [bio, setBio] = useState("");
   const [age, setAge] = useState("");
   const [location, setLocation] = useState("");
@@ -31,8 +34,7 @@ const EditProfileModal = (props) => {
   const [linkedIn, setLinkedIn] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(profile);
-
-
+  
 const handleSubmit = async(e)=>{
   e.preventDefault()
   const formData = new FormData();
@@ -58,8 +60,11 @@ const handleSubmit = async(e)=>{
     console.log(result);
     if(result){
       // setIsClicked(true)
-      toast.success(result.message)
+      toast.success(result.message);
+      
+
     }
+    
   } catch (error) {
     console.error("Error updating profile:",error)
   }
@@ -89,8 +94,6 @@ const handleSubmit = async(e)=>{
     } catch (error) {
       console.log(error.message);
     }
-   
-    
   };
 
   // working on input file to update profile
@@ -105,7 +108,7 @@ const handleSubmit = async(e)=>{
     if (file){
       reader.readAsDataURL(file)
     }
-
+    
   };
 
   useEffect(()=>{

@@ -6,6 +6,7 @@ import railwaypic from "../assets/railway.png"
 import shippic from "../assets/ship.png"
 import platespic from "../assets/plates.png";
 import closeicon from "../assets/close-circle.png";
+import imgicon from "../assets/gallery.png";
 import "../style/Post.css"
 
 
@@ -16,10 +17,10 @@ const PostModal = () => {
     const handleShow = () => setShow(true);
   return (
     <>
-    <Button variant="primary" className='btn button1 postbtn text-white  rounded-5' onClick={handleShow}>
+    {/* <Button variant="primary" className='btn button1 postbtn text-white  rounded-5' >
         Post
-      </Button>
-
+      </Button> */}
+      <img src={imgicon} alt="gallery-icon" onClick={handleShow} />
       <Modal
         show={show}
         onHide={handleClose}

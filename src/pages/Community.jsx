@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Bio from "../components/Bio";
 import { Link } from "react-router-dom";
+import { Prev } from "react-bootstrap/esm/PageItem";
+import toast from "react-hot-toast";
 
 const Community = () => {
   const [data, setdata] = useState([]);
+  const [currentUser,setCurrentUser] = useState(null);
+  const token = localStorage.getItem("clientToken");
+
+
+
   const getUsers = async () => {
     const request = await fetch("https://em-project-backend-tur2.onrender.com/api/v1/users/all");
     const response = await request.json();
@@ -11,9 +18,98 @@ const Community = () => {
     setdata(response.users);
   };
 
+  // 27 may 2024
+  const getCurrentUser = async ()=>{
+    try {
+      const request = await fetch("https://em-project-backend-tur2.onrender.com/api/v1/users",{
+        headers:{
+          "Content-Type" : "application/json",
+          Authorization:`Bearer ${token}`,
+        },
+      });
+      const response = await request.json();
+      if(response.success){
+        setCurrentUser(response.user);
+      }else{
+        console.error(response.message);
+      }
+    } catch (error) {
+      console.error("Failed to fetch current user:",error);
+    }
+  };
+
+  // follow function
+  const handleFollow = async (userId)=>{
+    if(!currentUser) return;
+    try {
+      const response = await fetch(`https://em-project-backend-tur2.onrender.com/api/v1/users/follow/${userId}`,{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId: currentUser._id}),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.success){
+        setdata((prevData) =>
+          prevData.map((user) =>
+            user._id === userId
+              ? { ...user, followers: [...user.followers, currentUser._id] }
+              : user
+          )
+        );
+        toast.success(result.message)
+      } else {
+        console.error(result.message);
+        toast.error(result.message)
+      };
+    } catch (error) {
+      console.error("Failed to follow user:",error);
+    }
+  };
+
+  // unfollow function
+  const handleUnfollow = async (userId)=>{
+    if (!currentUser) return;
+    try {
+      const response = await fetch(`https://em-project-backend-tur2.onrender.com/api/v1/users/unfollow/${userId}`,{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId: currentUser._id}),
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.success){
+        setdata((prevData) =>
+          prevData.map((user) =>
+            user._id === userId
+              ? { ...user, followers: user.followers.filter((id)=> id !== currentUser._id) }
+              : user
+          )
+        );
+        toast.success(result.message)
+      } else {
+        console.error(result.message);
+        toast.error(result.message)
+      };
+    } catch (error) {
+      console.error("Failed to unfollow user:",error);
+    }
+  }
+
   useEffect(() => {
+    getCurrentUser();
+    if(token){
+      getCurrentUser();
+    }
     getUsers();
-  }, []);
+    document.title = "community | page";
+  }, [token]);
   return (
     <>
       <main className="container">
@@ -28,6 +124,9 @@ const Community = () => {
                 <>
                   {data?.map((datum) => {
                     const { profilePhoto, followers, userName, _id } = datum;
+                    // for following
+                    const isFollowing = followers.includes(currentUser?._id);
+
                     return (
                       <div
                         key={_id}
@@ -54,11 +153,23 @@ const Community = () => {
                           </div>
                         </div>
                             </Link>
-                        <div>
+                          
+                          <div>
+                          {isFollowing ? (
+                            <button className="btn rounded-5 border" onClick={() => handleUnfollow(_id)}>
+                              Following
+                            </button>
+                          ) : (
+                            <button className="btn rounded-5 border" onClick={() => handleFollow(_id)}>
+                              Follow +
+                            </button>
+                          )}
+                          </div>
+                        {/* <div>
                           <button className="btn rounded-5 border">
                             follows +
                           </button>
-                        </div>
+                        </div> */}
                       </div>
                     );
                   })}

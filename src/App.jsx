@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './App.css'
 import NavBar from './layout/NavBar';
-import Home from './pages/Home';
 import Profile from './pages/Profile';
 import FriendProfile from './pages/FriendProfile';
 import SignUp from './auth/SignUp';
@@ -20,6 +19,7 @@ import { Toaster } from 'react-hot-toast';
 import Bio from './components/Bio';
 import Community from './pages/Community';
 import SingleUserProfile from './pages/SingleUserProfile';
+import ResetPassword from './auth/ResetPassword';
 
 function App() {
   
@@ -42,7 +42,8 @@ function App() {
     <Route path='/SignUp' element={<SignUp/>}/>
     <Route path='/' element={<SignIn/>}/>
     <Route path='/Fetch' element={<Fetch/>}/>
-    <Route path='/ForgotPassword' element={<ForgotPassword/>}/>
+    <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+    <Route path='/resetpassword/:resetToken' element={<ResetPassword/>}/>
     <Route path='/Registration' element={<Registration/>}/>
     
     <Route path='*' element={<Error/>}/>
